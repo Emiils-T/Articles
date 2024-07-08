@@ -1,0 +1,99 @@
+{% extends 'base.html.twig' %}
+{% block content %}
+    <!doctype html>
+    <html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script src="https://cdn.tailwindcss.com"></script>
+    </head>
+    <body class="bg-gray-100 text-gray-900">
+
+    <div class="container mx-auto px-4 py-8">
+        <h1 class="text-4xl font-bold mb-8">Article</h1>
+        <ul class="space-y-6">
+
+            {% set articleTitle = "" %}
+            {% set articleID = "" %}
+
+            {% for item in items %}
+                <li class="bg-white shadow-md rounded-lg p-6">
+                    <h2 class="text-2xl font-semibold mb-2">{{ item.getTitle() }}</h2>
+                    <p class="text-gray-700">{{ item.getContent() }}</p>
+                    <p class="text-gray-1200">Likes : <span class="text-gray-700">{{ item.getLikes() }} </span></p>
+                    <form action="/articles/like" method="POST">
+                        <input type="hidden" name="id" value="{{ item.getUuid() }}">
+                        <input type="hidden" name="title" value="{{ item.getTitle() }}">
+                        <button type="submit"
+                                class="bg-blue-500 text-white px-2 py-1 rounded-md shadow-sm hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                            Upvote
+                        </button>
+                    </form>
+                </li>
+                {% set articleTitle = item.getTitle() %}
+                {% set articleID = item.getUuid() %}
+
+            {% endfor %}
+        </ul>
+    </div>
+
+    <div class="mt-10">
+        <h3 class="text-3xl font-semibold mb-6">Comments</h3>
+        <ul class="space-y-4">
+            {% for comment in comments %}
+
+                <li class="bg-white shadow-md rounded-lg p-4">
+                    <p class="text-gray-900 font-semibold">{{ comment.getAuthor() }} <span
+                                class="font-normal">said :</span></p>
+                    <p class="text-gray-700">{{ comment.getContent() }}</p>
+                    <p class="text-gray-1200">Likes : <span class="text-gray-700">{{ comment.getLikes() }} </span></p>
+                    <p class="text-gray-500 text-sm">{{ comment.getDate().format('Y-m-d H:i:s') }}</p>
+
+                    {# like button #}
+                    <form action="/comment/like" method="POST" class="flex space-x-2">
+                        <input type="hidden" name="commentID" value="{{ comment.getCommentID() }}">
+                        <input type="hidden" name="title" value="{{ articleTitle }}">
+                        <button type="submit"
+                                class="bg-blue-500 text-white px-2 py-1 rounded-md shadow-sm hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                            Like
+                        </button>
+                        <button type="submit" formaction="/comment/delete"
+                                class="bg-red-500 text-white px-2 py-1 rounded-md shadow-sm hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
+                            Delete comment
+                        </button>
+                    </form>
+                </li>
+
+
+
+            {% endfor %}
+        </ul>
+
+
+        <form action="/comment" method="POST" class="mt-6 bg-white shadow-md rounded-lg p-6">
+            <div class="mb-4">
+                <label for="author" class="block text-gray-700">Name</label>
+                <input type="text" name="author" id="author"
+                       class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                       required>
+            </div>
+            <div class="mb-4">
+                <label for="content" class="block text-gray-700">Comment</label>
+                <textarea name="content" id="content" rows="4"
+                          class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                          required></textarea>
+            </div>
+            <input type="hidden" name="articleID" value="{{ articleID }}">
+            <input type="hidden" name="title" value="{{ articleTitle | url_encode }}">
+            <div class="flex justify-end">
+                <button type="submit"
+                        class="bg-blue-500 text-white px-4 py-2 rounded-md shadow-sm hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                    Post Comment
+                </button>
+            </div>
+        </form>
+    </div>
+
+    </body>
+    </html>
+{% endblock %}
