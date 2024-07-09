@@ -32,7 +32,7 @@ class CommentController
 
     }
 
-    public function likeComment():RedirectResponse//TODO add delete comments by id
+    public function likeComment():RedirectResponse
     {
         $title = $_POST['title'];
         $commentID = $_POST['commentID'];

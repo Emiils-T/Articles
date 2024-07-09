@@ -13,7 +13,7 @@ class Article
     private ?string $uuid;
     private ?int $likes;
 
-    public function __construct(string $title, string $content, Carbon $date , string $uuid = null ,int $likes = 0)//TODO add likes=0
+    public function __construct(string $title, string $content, Carbon $date , string $uuid = null ,int $likes = 0)
     {
         $this->title = $title;
         $this->content = $content;
